@@ -1,11 +1,8 @@
 #!/bin/bash
 
 # Define AWS account profiles
-aws_profiles=("management" "corporate-applications" "public-sites" "tii-data-lake")
-
-# Define the base S3 bucket and path for saving results
-s3_bucket="AWSScoutSuiteConfigurationAuditReports"
-s3_base_path="ScoutSuiteAudits"
+aws_profiles=("management-account" "corporate-applications" "public-sites" "tii-data-lake")
+sandbox_profile="sandbox1admin"
 
 # Path to ScoutSuite executable
 scout_executable="scout.py"
@@ -13,24 +10,38 @@ scout_executable="scout.py"
 # Get the current date
 current_datetime=$(date '+%Y-%m-%d_%H-%M-%S')
 
+# Base directory for storing results
+results_base_directory="./results"
+
+# Temporary directory for storing reports 
+temp_directory="./temp_report"
+
+# Define the S3 bucket path for the sandbox account
+s3_bucket="s3://awsconfigauditscoutreport/"
+
+# Create the base directory
+mkdir -p "$results_base_directory"
+
 # Iterate through each AWS profile and run ScoutSuite
 for profile in "${aws_profiles[@]}"; do
-    # Create a local directory for the current profile and date
-    local_profile_directory="./${profile}"
-    local_datetime_directory="${local_profile_directory}/${current_datetime}"
-    mkdir -p "$local_datetime_directory"
-
+    # Create a directory for the current profile and date
+    profile_directory="$results_base_directory/$profile/$current_datetime"
+    mkdir -p "$profile_directory"
+   
     # Run ScoutSuite for the current profile
     echo "Running ScoutSuite for profile: $profile"
-    scout_suite_command="python $scout_executable aws --profile $profile --report-dir $local_datetime_directory"
-    eval $scout_suite_command
+    python "$scout_executable" aws --profile "$profile" --report-dir "$profile_directory"
+    if [ $? -ne 0 ]; then
+        echo "Error: ScoutSuite failed for profile: $profile"
+        continue
+    fi
 
-    # Upload the results to S3
-    s3_path="s3://${s3_bucket}/${s3_base_path}/${profile}/${current_datetime}/"
-    aws s3 cp --recursive "$local_datetime_directory" "$s3_path"
-    
-    # Optional: Clean up local directories
-    rm -rf "$local_profile_directory"
+    # Upload the ScoutSuite report to the S3 bucket in the sandbox account
+    #echo "Uploading report to S3 bucket in sandbox account: $s3_bucket"
+    #aws s3 cp "$profile_directory" "$s3_bucket" --recursive --profile "$sandbox_profile"
+    #if [ $? -ne 0 ]; then
+    #    echo "Error: Failed to upload report for profile: $profile to S3"
+    #fi
 done
 
-echo "ScoutSuite audit completed for all profiles and results uploaded to S3."
+echo "ScoutSuite audit completed and uploaded to the sandbox account for all profiles."

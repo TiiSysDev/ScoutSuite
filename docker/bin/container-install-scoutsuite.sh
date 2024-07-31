@@ -16,6 +16,7 @@ cd ScoutSuite
 virtualenv -p python3 scoutsuite
 source ${WORKDIR}/scoutsuite/bin/activate
 pip install -r requirements.txt
+python -m pip install --upgrade awscli
 python scout.py --help
 
 echo -e "\n\nScoutsuite Installation Complete!\n\n"
