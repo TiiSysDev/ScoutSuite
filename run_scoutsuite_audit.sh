@@ -2,7 +2,7 @@
 
 # Define AWS account profiles
 aws_profiles=("management-account" "corporate-applications" "public-sites" "tii-data-lake")
-sandbox_profile="sandbox1admin"
+sandbox_profile="sandbox1-admin"
 
 # Path to ScoutSuite executable
 scout_executable="scout.py"
