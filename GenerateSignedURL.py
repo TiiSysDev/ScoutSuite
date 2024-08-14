@@ -19,8 +19,8 @@ def rsa_signer(message):
     return private_key.sign(message, padding.PKCS1v15(), hashes.SHA1())
 
 # Set the Key ID and Distribution domain name
-key_id = 'KCZ21FGS965K8'  # Key ID on the Public Keys Screen
-url = 'https://d58zunix20d2g.cloudfront.net'  # Distribution domain name
+key_id = "KCZ21FGS965K8"  # Key ID on the Public Keys Screen
+url = "https://d58zunix20d2g.cloudfront.net"  # Distribution domain name
 
 # Calculate the expiry date as one hour from the current time
 expire_date = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
