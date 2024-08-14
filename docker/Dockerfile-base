@@ -38,14 +38,8 @@ RUN ["/bin/bash", "-c", "/root/bin/container-install-scoutsuite.sh"]
 # Set a nice message
 RUN ["/bin/bash", "-c", "/root/bin/container-set-init.sh"]
 
-# Copy the Bash script into the container
-#COPY run_scoutsuite_audit.sh /root/run_scoutsuite_audit.sh
-
-# Ensure the script has execution permissions
-#RUN chmod +x /root/run_scoutsuite_audit.sh
-
-# Set the script as the entrypoint
-#ENTRYPOINT ["/root/run_scoutsuite_audit.sh"]
+# Install AWS CLI
+RUN ["/bin/bash", "-c", "/root/bin/container-install-aws2.sh"]
 
 # Remove scripts
 RUN ["rm", "-rf", "/root/bin"]
