@@ -14,7 +14,7 @@ current_datetime=$(date '+%Y-%m-%d_%H-%M-%S')
 results_base_directory="./results"
 
 # Define the S3 bucket path for the sandbox account
-s3_bucket="s3://awsconfigauditscoutreport/"
+s3_bucket="s3://awsconfigauditscoutreport"
 
 # Create the base directory
 mkdir -p "$results_base_directory" || { echo "Error creating base directory: $results_base_directory"; exit 1; }
@@ -33,8 +33,8 @@ for profile in "${aws_profiles[@]}"; do
     fi
 
     # Upload the ScoutSuite report to the S3 bucket in the sandbox account
-    echo "Uploading report to S3 bucket in sandbox account: $s3_bucket"
-    if ! aws s3 cp "$profile_directory/" "$s3_bucket/" --recursive --profile "$sandbox_profile"; then
+    echo "Uploading report to S3 bucket in sandbox account: $s3_bucket/$profile/$current_datetime"
+    if ! aws s3 cp "$profile_directory/" "$s3_bucket/$profile/$current_datetime/" --recursive --profile "$sandbox_profile"; then
         echo "Error: Failed to upload report for profile: $profile to S3"
     fi
 done
