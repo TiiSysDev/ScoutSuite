@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM rossja/ncc-scoutsuite:aws-latest
 
 LABEL maintainer="Jason Ross <algorythm@gmail.com>"
 
@@ -28,6 +28,8 @@ LABEL \
 
 # Copy helper scripts to container
 ADD bin /root/bin
+# Install AWS CLI
+RUN ["/bin/bash", "-c", "/root/bin/container-install-aws2.sh"]
 
 # Install required software
 RUN ["/bin/bash", "-c", "/root/bin/container-install-prereqs.sh"]

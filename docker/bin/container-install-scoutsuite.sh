@@ -19,5 +19,11 @@ pip install -r requirements.txt
 python -m pip install --upgrade awscli
 python scout.py --help
 
+# Install from your fork
+git clone https://github.com/TiiSysDev/ScoutSuite.git
+cd ScoutSuite
+pip install -e .
+
+
 echo -e "\n\nScoutsuite Installation Complete!\n\n"
 
